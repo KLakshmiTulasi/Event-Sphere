@@ -1,0 +1,390 @@
+{% extends "base.html" %}
+
+{% block title %}
+EventSphere - Dashboard
+{% endblock %}
+
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- DASHBOARD HEADER -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="section-label">
+                EVENTSPHERE
+            </p>
+
+            <h1>
+                Dashboard
+            </h1>
+
+            <p>
+                Manage and monitor your events from here.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('create_event') }}"
+            class="btn">
+            + Create Event
+        </a>
+
+    </div>
+
+
+    <!-- STATISTICS -->
+
+    <div class="dashboard-cards">
+
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                📅
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ event_count }}
+                </h2>
+
+                <p>
+                    Total Events
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ participant_count }}
+                </h2>
+
+                <p>
+                    Participants
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                🏢
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ venue_count }}
+                </h2>
+
+                <p>
+                    Venues
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                🤝
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ vendor_count }}
+                </h2>
+
+                <p>
+                    Vendors
+                </p>
+
+            </div>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- QUICK ACTIONS -->
+
+    <section class="quick-section"> 
+        <h2> 
+            Quick Actions 
+        </h2> 
+        <div class="quick-actions">
+            <a
+                href="{{ url_for('create_event') }}"
+                class="quick-card">
+
+                <span>➕</span>
+
+                <div>
+                    <h3>Create Event</h3>
+
+                    <p>
+                        Create a new event
+                    </p>
+                </div>
+
+            </a>
+
+
+            <a
+                href="{{ url_for('events') }}"
+                class="quick-card">
+
+                <span>📋</span>
+
+                <div>
+                    <h3>View Events</h3>
+
+                    <p>
+                        View all events
+                    </p>
+                </div>
+
+            </a>
+
+            <!-- QR CHECK-IN -->
+
+<a
+    href="{{ url_for('checkin') }}"
+    class="quick-card">
+
+    <span>📱</span>
+
+    <div>
+
+        <h3>QR Check-in</h3>
+
+        <p>
+            Check in participants
+        </p>
+
+    </div>
+
+</a>
+
+
+<!-- ATTENDANCE -->
+
+<a
+    href="{{ url_for('attendance') }}"
+    class="quick-card">
+
+    <span>✅</span>
+
+    <div>
+
+        <h3>Attendance</h3>
+
+        <p>
+            View participant attendance
+        </p>
+
+    </div>
+
+</a>
+
+            <!-- REPORTS -->
+
+<a
+    href="{{ url_for('reports') }}"
+    class="quick-card">
+
+    <span>📊</span>
+
+    <div>
+
+        <h3>Reports</h3>
+
+        <p>
+            View event reports
+        </p>
+
+    </div>
+
+</a>
+
+
+           <a
+                href="{{ url_for('register') }}"
+                class="quick-card">
+
+                <span>👥</span>
+
+                <div>
+                <h3>Participants</h3>
+
+                    <p>
+                        Register participants
+                    </p>
+                </div>
+
+            </a>
+
+            <!-- FIND TICKET -->
+
+<a
+    href="{{ url_for('find_ticket') }}"
+    class="quick-card">
+
+    <span>🎟️</span>
+
+    <div>
+
+        <h3>Find Ticket</h3>
+
+        <p>
+            View a digital ticket
+        </p>
+
+    </div>
+
+</a>
+
+
+            <a
+                href="{{ url_for('venues') }}"
+                class="quick-card">
+
+                <span>🏢</span>
+
+                <div>
+                <h3>Venues</h3>
+
+                    <p>
+                        Manage event venues
+                    </p>
+                </div>
+
+            </a>
+
+    </section>
+
+
+    <!-- RECENT EVENTS -->
+
+    <section class="recent-section">
+
+        <div class="section-title-row">
+
+            <h2>
+                Recent Events
+            </h2>
+
+            <a
+                href="{{ url_for('events') }}">
+                View All
+            </a>
+
+        </div>
+
+
+        {% if recent_events %}
+
+            <div class="recent-events">
+
+                {% for event in recent_events %}
+
+                    <div class="recent-event-card">
+
+                        <div class="event-date">
+
+                            <span>
+                                {{ event["date"] }}
+                            </span>
+
+                        </div>
+
+
+                        <div class="recent-event-info">
+
+                            <h3>
+                                {{ event["name"] }}
+                            </h3>
+
+                            <p>
+                                {{ event["description"] or
+                                "No description available." }}
+                            </p>
+
+                            <small>
+                                🕐
+                                {{ event["start_time"] }}
+                                -
+                                {{ event["end_time"] }}
+
+                                &nbsp;&nbsp;
+
+                                📍
+                                {{ event["venue"] or
+                                "Venue not assigned" }}
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                {% endfor %}
+
+            </div>
+
+        {% else %}
+
+            <div class="empty-dashboard">
+
+                <div>
+                    📅
+                </div>
+
+                <h3>
+                    No Events Yet
+                </h3>
+
+                <p>
+                    Create your first event to see it
+                    appear on your dashboard.
+                </p>
+
+                <a
+                    href="{{ url_for('create_event') }}"
+                    class="btn">
+                    Create Event
+                </a>
+
+            </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,289 @@
+{% extends "base.html" %}
+
+{% block title %}
+EventSphere - Home
+{% endblock %}
+
+
+{% block content %}
+
+<!-- HERO SECTION -->
+
+<section class="hero">
+
+    <div class="hero-content">
+
+        <div class="hero-badge">
+            EVENT MANAGEMENT PLATFORM
+        </div>
+
+        <h1>
+            Manage Every Event
+            <span>With Ease</span>
+        </h1>
+
+        <p>
+            EventSphere helps you plan, organize and manage
+            events, participants, venues, resources and vendors
+            from one centralized platform.
+        </p>
+
+        <div class="hero-buttons">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn">
+                Go to Dashboard
+            </a>
+
+            <a
+                href="{{ url_for('create_event') }}"
+                class="btn outline">
+                Create Event
+            </a>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- ABOUT SECTION -->
+
+<section class="about-section">
+
+    <div class="section-heading">
+
+        <p class="section-label">
+            ABOUT EVENTSPHERE
+        </p>
+
+        <h2>
+            Everything You Need
+            In One Place
+        </h2>
+
+        <p>
+            EventSphere is a web-based event management
+            platform designed to reduce manual work and
+            simplify event organization.
+        </p>
+
+    </div>
+
+
+    <div class="about-grid">
+
+        <div class="about-card">
+
+            <div class="about-icon">
+                📅
+            </div>
+
+            <h3>
+                Plan
+            </h3>
+
+            <p>
+                Create events and organize important
+                event information efficiently.
+            </p>
+
+        </div>
+
+
+        <div class="about-card">
+
+            <div class="about-icon">
+                🏢
+            </div>
+
+            <h3>
+                Organize
+            </h3>
+
+            <p>
+                Manage venues, resources and vendors
+                from a centralized system.
+            </p>
+
+        </div>
+
+
+        <div class="about-card">
+
+            <div class="about-icon">
+                👥
+            </div>
+
+            <h3>
+                Manage
+            </h3>
+
+            <p>
+                Handle participant registrations,
+                tickets and attendance.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- FEATURES -->
+
+<section class="features-section">
+
+    <div class="section-heading">
+
+        <p class="section-label">
+            FEATURES
+        </p>
+
+        <h2>
+            Powerful Event Management
+        </h2>
+
+    </div>
+
+
+    <div class="feature-container">
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📅
+            </div>
+
+            <h3>
+                Event Management
+            </h3>
+
+            <p>
+                Create, update and manage all
+                your events efficiently.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🏢
+            </div>
+
+            <h3>
+                Venue Management
+            </h3>
+
+            <p>
+                Manage venues and prevent
+                scheduling conflicts.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                👥
+            </div>
+
+            <h3>
+                Participant Registration
+            </h3>
+
+            <p>
+                Register participants and
+                securely store their details.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🎟️
+            </div>
+
+            <h3>
+                Digital Tickets
+            </h3>
+
+            <p>
+                Generate digital tickets and
+                QR codes for participants.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                🤝
+            </div>
+
+            <h3>
+                Vendor Management
+            </h3>
+
+            <p>
+                Register and assign vendors
+                to events.
+            </p>
+
+        </div>
+
+
+        <div class="feature-card">
+
+            <div class="feature-icon">
+                📊
+            </div>
+
+            <h3>
+                Reports
+            </h3>
+
+            <p>
+                Track event information and
+                attendance through reports.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- CALL TO ACTION -->
+
+<section class="cta-section">
+
+    <h2>
+        Ready to Manage Your Event?
+    </h2>
+
+    <p>
+        Start creating and organizing your events
+        with EventSphere.
+    </p>
+
+    <a
+        href="{{ url_for('create_event') }}"
+        class="btn">
+        Create Your First Event
+    </a>
+
+</section>
+
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block title %}
+Events - EventSphere
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-container">
+
+
+    <!-- HEADER -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="section-label">
+                EVENT MANAGEMENT
+            </p>
+
+            <h1>
+                All Events
+            </h1>
+
+            <p>
+                View and manage your created events.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('create_event') }}"
+            class="btn">
+            + Create Event
+        </a>
+
+    </div>
+
+
+    <!-- EVENTS -->
+
+    {% if events %}
+
+        <div class="events-container">
+
+            {% for event in events %}
+
+                <div class="event-card">
+
+                    <div class="event-card-top">
+
+                        <span class="event-badge">
+                            EVENT
+                        </span>
+
+                    </div>
+
+
+                    <h2>
+                        {{ event["name"] }}
+                    </h2>
+
+
+                    <p class="event-description">
+
+                        {{ event["description"] or
+                        "No description available." }}
+
+                    </p>
+
+
+                    <div class="event-details">
+
+                        <p>
+                            📅
+                            <strong>Date:</strong>
+                            {{ event["date"] }}
+                        </p>
+
+
+                        <p>
+                            🕐
+                            <strong>Time:</strong>
+                            {{ event["start_time"] }}
+                            -
+                            {{ event["end_time"] }}
+                        </p>
+
+
+                        <p>
+                            📍
+                            <strong>Venue:</strong>
+                            {{ event["venue"] or
+                            "Not assigned" }}
+                        </p>
+
+
+                        <p>
+                            👤
+                            <strong>Organizer:</strong>
+                            {{ event["organizer"] or
+                            "Not specified" }}
+                        </p>
+
+
+                        <p>
+                            👥
+                            <strong>Maximum Participants:</strong>
+
+                            {{ event["max_participants"] or
+                            "Not specified" }}
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-dashboard">
+
+            <div>
+                📅
+            </div>
+
+            <h3>
+                No Events Yet
+            </h3>
+
+            <p>
+                Create your first event to get started.
+            </p>
+
+            <a
+                href="{{ url_for('create_event') }}"
+                class="btn">
+                Create Event
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

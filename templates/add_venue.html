@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Venue - EventSphere
+{% endblock %}
+
+
+{% block content %}
+
+<div class="form-container">
+
+    <div class="form-header">
+
+        <p class="section-label">
+            VENUE MANAGEMENT
+        </p>
+
+        <h1>
+            Add New Venue
+        </h1>
+
+        <p>
+            Add a venue that can be assigned to events.
+        </p>
+
+    </div>
+
+
+    <form method="POST">
+
+
+        <label for="name">
+            Venue Name *
+        </label>
+
+        <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Example: SVEC Auditorium"
+            required
+        >
+
+
+        <label for="location">
+            Location
+        </label>
+
+        <input
+            type="text"
+            id="location"
+            name="location"
+            placeholder="Example: Main Block"
+        >
+
+
+        <label for="capacity">
+            Capacity
+        </label>
+
+        <input
+            type="number"
+            id="capacity"
+            name="capacity"
+            placeholder="Example: 500"
+            min="1"
+        >
+
+
+        <div class="form-buttons">
+
+            <a
+                href="{{ url_for('venues') }}"
+                class="btn cancel-btn">
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn">
+                Add Venue
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}
+Find Ticket - EventSphere
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="section-label">
+                EVENTSPHERE
+            </p>
+
+            <h1>
+                Find Digital Ticket
+            </h1>
+
+            <p>
+                Enter the participant email to find their ticket.
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <div class="form-card">
+
+        <form method="POST">
+
+            <label>
+                Participant Email
+            </label>
+
+            <input
+                type="email"
+                name="email"
+                placeholder="Enter participant email"
+                required
+            >
+
+            <button
+                type="submit"
+                class="btn">
+
+                Find Ticket
+
+            </button>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

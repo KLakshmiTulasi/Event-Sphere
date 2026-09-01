@@ -1,0 +1,179 @@
+{% extends "base.html" %}
+
+{% block title %}
+Digital Ticket - EventSphere
+{% endblock %}
+
+
+{% block content %}
+
+<div class="ticket-page">
+
+    <div class="ticket-card">
+
+        <div class="ticket-header">
+
+            <p class="section-label">
+                EVENTSPHERE
+            </p>
+
+            <h1>
+                Digital Ticket
+            </h1>
+
+            <p>
+                Registration confirmed!
+            </p>
+
+        </div>
+
+
+        <div class="ticket-event">
+
+            <h2>
+                {{ participant["event_name"] }}
+            </h2>
+
+            <p>
+                {{ participant["event_description"]
+                   or "EventSphere Event" }}
+            </p>
+
+        </div>
+
+
+        <div class="ticket-details">
+
+            <div>
+                <strong>
+                    Participant
+                </strong>
+
+                <span>
+                    {{ participant["name"] }}
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    Email
+                </strong>
+
+                <span>
+                    {{ participant["email"] }}
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    Date
+                </strong>
+
+                <span>
+                    {{ participant["event_date"] }}
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    Time
+                </strong>
+
+                <span>
+                    {{ participant["start_time"] }}
+                    -
+                    {{ participant["end_time"] }}
+                </span>
+            </div>
+
+
+            <div>
+                <strong>
+                    Venue
+                </strong>
+
+                <span>
+                    {{ participant["venue"]
+                       or "Venue not assigned" }}
+                </span>
+            </div>
+
+        </div>
+
+
+        <div class="ticket-qr">
+
+            <img
+                src="{{ url_for(
+                    'static',
+                    filename='qrcodes/' +
+                    participant['qr_code']
+                ) }}"
+                alt="Ticket QR Code"
+            >
+
+            <p>
+                Scan this QR code at the event
+                entrance.
+            </p>
+
+        </div>
+
+
+        <div class="ticket-id">
+
+            <strong>
+                Ticket ID
+            </strong>
+
+            <span>
+                {{ participant["ticket_id"] }}
+            </span>
+
+        </div>
+
+
+        <div class="ticket-actions">
+
+    <!-- BACK TO DASHBOARD -->
+
+    <a
+        href="{{ url_for('dashboard') }}"
+        class="btn">
+
+        Back to Dashboard
+
+    </a>
+
+
+    <!-- CHECK-IN -->
+
+    <a
+        href="{{ url_for('checkin') }}"
+        class="btn">
+
+        ✅ Check In
+
+    </a>
+
+
+    <!-- REGISTER ANOTHER PARTICIPANT -->
+
+    <a
+        href="{{ url_for('register') }}"
+        class="btn cancel-btn">
+
+        Register Another Participant
+
+    </a>
+
+</div>
+
+    </div>
+
+</div>
+
+{% endblock %}

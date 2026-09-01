@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block title %}
+EventSphere - Vendors
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- HEADER -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="section-label">
+                EVENTSPHERE
+            </p>
+
+            <h1>
+                Vendor Management
+            </h1>
+
+            <p>
+                Manage all your event vendors from here.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('add_vendor') }}"
+            class="btn">
+            + Add Vendor
+        </a>
+
+    </div>
+
+
+    <!-- VENDOR LIST -->
+
+    {% if vendors %}
+
+        <div class="recent-events">
+
+            {% for vendor in vendors %}
+
+                <div class="recent-event-card">
+
+                    <!-- ICON -->
+
+                    <div class="stat-icon">
+                        🤝
+                    </div>
+
+
+                    <!-- VENDOR DETAILS -->
+
+                    <div class="recent-event-info">
+
+                        <h3>
+                            {{ vendor["name"] }}
+                        </h3>
+
+                        <p>
+                            <strong>Service:</strong>
+                            {{ vendor["service"] or "Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>Phone:</strong>
+                            {{ vendor["phone"] or "Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>Email:</strong>
+                            {{ vendor["email"] or "Not provided" }}
+                        </p>
+
+                        <p>
+                            <strong>Event:</strong>
+                            {{ vendor["event_name"] or "Not assigned" }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <!-- EMPTY STATE -->
+
+        <div class="empty-dashboard">
+
+            <div>
+                🤝
+            </div>
+
+            <h3>
+                No Vendors Yet
+            </h3>
+
+            <p>
+                Register your first vendor to see them here.
+            </p>
+
+            <a
+                href="{{ url_for('add_vendor') }}"
+                class="btn">
+                Add Vendor
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

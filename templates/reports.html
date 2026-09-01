@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block title %}
+EventSphere - Reports
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- REPORT HEADER -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="section-label">
+                EVENTSPHERE
+            </p>
+
+            <h1>
+                Reports
+            </h1>
+
+            <p>
+                View event statistics and attendance reports.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="btn">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                📅
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ total_events }}
+                </h2>
+
+                <p>
+                    Total Events
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ total_participants }}
+                </h2>
+
+                <p>
+                    Total Participants
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ checked_in_count }}
+                </h2>
+
+                <p>
+                    Checked In
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                📊
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ attendance_percentage }}%
+                </h2>
+
+                <p>
+                    Attendance
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- EVENT REPORT -->
+
+    <section class="recent-section">
+
+        <div class="section-title-row">
+
+            <h2>
+                Event-wise Report
+            </h2>
+
+        </div>
+
+
+        {% if event_reports %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Event
+                        </th>
+
+                        <th>
+                            Date
+                        </th>
+
+                        <th>
+                            Participants
+                        </th>
+
+                        <th>
+                            Checked In
+                        </th>
+
+                        <th>
+                            Attendance %
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for event in event_reports %}
+
+                    <tr>
+
+                        <td>
+                            {{ event["name"] }}
+                        </td>
+
+                        <td>
+                            {{ event["date"] }}
+                        </td>
+
+                        <td>
+                            {{ event["participant_count"] }}
+                        </td>
+
+                        <td>
+                            {{ event["checked_in_count"] }}
+                        </td>
+
+                        <td>
+
+                            {% if event["participant_count"] > 0 %}
+
+                                {{ (
+                                    event["checked_in_count"]
+                                    * 100
+                                    / event["participant_count"]
+                                ) | round(1) }}%
+
+                            {% else %}
+
+                                0%
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-dashboard">
+
+            <div>
+                📊
+            </div>
+
+            <h3>
+                No Report Data
+            </h3>
+
+            <p>
+                Create events and register participants to generate reports.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}

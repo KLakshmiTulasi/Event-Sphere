@@ -1,0 +1,197 @@
+{% extends "base.html" %}
+
+{% block title %}
+Create Event - EventSphere
+{% endblock %}
+
+
+{% block content %}
+
+<div class="form-container">
+
+    <div class="form-header">
+
+        <p class="section-label">
+            EVENT MANAGEMENT
+        </p>
+
+        <h1>
+            Create New Event
+        </h1>
+
+        <p>
+            Enter the details below to create your event.
+        </p>
+
+    </div>
+
+
+    <form method="POST">
+
+
+        <!-- EVENT NAME -->
+
+        <label for="name">
+            Event Name *
+        </label>
+
+        <input
+            type="text"
+            id="name"
+            name="name"
+            placeholder="Example: Annual College Fest"
+            required
+        >
+
+
+        <!-- DESCRIPTION -->
+
+        <label for="description">
+            Event Description
+        </label>
+
+        <textarea
+            id="description"
+            name="description"
+            rows="4"
+            placeholder="Describe your event..."
+        ></textarea>
+
+
+        <!-- DATE -->
+
+        <label for="date">
+            Event Date *
+        </label>
+
+        <input
+            type="date"
+            id="date"
+            name="date"
+            required
+        >
+
+
+        <!-- TIME -->
+
+        <div class="form-row">
+
+            <div>
+
+                <label for="start_time">
+                    Start Time *
+                </label>
+
+                <input
+                    type="time"
+                    id="start_time"
+                    name="start_time"
+                    required
+                >
+
+            </div>
+
+
+            <div>
+
+                <label for="end_time">
+                    End Time *
+                </label>
+
+                <input
+                    type="time"
+                    id="end_time"
+                    name="end_time"
+                    required
+                >
+
+            </div>
+
+        </div>
+
+
+        <!-- VENUE -->
+
+        <label for="venue">
+    Venue
+</label>
+
+<select
+    id="venue"
+    name="venue">
+
+    <option value="">
+        -- Select Venue --
+    </option>
+
+    {% for venue in venues %}
+
+        <option value="{{ venue['name'] }}">
+
+            {{ venue['name'] }}
+
+            {% if venue['capacity'] %}
+                - Capacity: {{ venue['capacity'] }}
+            {% endif %}
+
+        </option>
+
+    {% endfor %}
+
+</select>
+
+
+        <!-- ORGANIZER -->
+
+        <label for="organizer">
+            Organizer Name *
+        </label>
+
+        <input
+            type="text"
+            id="organizer"
+            name="organizer"
+            placeholder="Enter organizer name"
+            required
+        >
+
+
+        <!-- MAX PARTICIPANTS -->
+
+        <label for="max_participants">
+            Maximum Participants
+        </label>
+
+        <input
+            type="number"
+            id="max_participants"
+            name="max_participants"
+            placeholder="Example: 500"
+            min="1"
+        >
+
+
+        <!-- BUTTONS -->
+
+        <div class="form-buttons">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn cancel-btn">
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn">
+                Create Event
+            </button>
+
+        </div>
+
+
+    </form>
+
+</div>
+
+{% endblock %}

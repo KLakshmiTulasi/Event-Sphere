@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}
+Venues - EventSphere
+{% endblock %}
+
+
+{% block content %}
+
+<div class="page-container">
+
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="section-label">
+                EVENT MANAGEMENT
+            </p>
+
+            <h1>
+                Venue Management
+            </h1>
+
+            <p>
+                Manage venues and their availability.
+            </p>
+
+        </div>
+
+
+        <a
+            href="{{ url_for('add_venue') }}"
+            class="btn">
+            + Add Venue
+        </a>
+
+    </div>
+
+
+    {% if venues %}
+
+        <div class="venue-grid">
+
+            {% for venue in venues %}
+
+                <div class="venue-card">
+
+                    <div class="venue-icon">
+                        🏢
+                    </div>
+
+
+                    <h2>
+                        {{ venue["name"] }}
+                    </h2>
+
+
+                    <p>
+                        📍
+                        {{ venue["location"] or
+                        "Location not specified" }}
+                    </p>
+
+
+                    <p>
+                        👥
+
+                        Capacity:
+
+                        {{ venue["capacity"] or
+                        "Not specified" }}
+
+                    </p>
+
+
+                    <div class="venue-actions">
+
+                        <a
+                            href="{{ url_for(
+                                'delete_venue',
+                                venue_id=venue['id']
+                            ) }}"
+                            class="delete-btn"
+                            onclick="return confirm(
+                                'Are you sure you want to delete this venue?'
+                            );">
+
+                            Delete
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-dashboard">
+
+            <div>
+                🏢
+            </div>
+
+            <h3>
+                No Venues Added
+            </h3>
+
+            <p>
+                Add your first venue to start
+                managing event locations.
+            </p>
+
+            <a
+                href="{{ url_for('add_venue') }}"
+                class="btn">
+                Add Venue
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

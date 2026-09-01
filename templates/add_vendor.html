@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+
+{% block title %}
+EventSphere - Add Vendor
+{% endblock %}
+
+{% block content %}
+
+<div class="form-page">
+
+    <div class="form-container">
+
+        <div class="form-header">
+
+            <p class="section-label">
+                EVENTSPHERE
+            </p>
+
+            <h1>
+                Register Vendor
+            </h1>
+
+            <p>
+                Add a vendor to EventSphere.
+            </p>
+
+        </div>
+
+
+        <form method="POST">
+
+            <!-- VENDOR NAME -->
+
+            <div class="form-group">
+
+                <label for="name">
+                    Vendor Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Enter vendor name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- SERVICE -->
+
+            <div class="form-group">
+
+                <label for="service">
+                    Service
+                </label>
+
+                <input
+                    type="text"
+                    id="service"
+                    name="service"
+                    placeholder="Example: Catering, Photography, Decoration"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="text"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter phone number"
+                    required
+                >
+
+            </div>
+
+
+            <!-- EMAIL -->
+
+            <div class="form-group">
+
+                <label for="email">
+                    Email
+                </label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Enter email address"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+    <label for="event_id">
+        Assign to Event
+    </label>
+
+    <select
+        id="event_id"
+        name="event_id"
+        required
+    >
+
+        <option value="">
+            Select an event
+        </option>
+
+        {% for event in events %}
+
+            <option value="{{ event['id'] }}">
+                {{ event['name'] }} - {{ event['date'] }}
+            </option>
+
+        {% endfor %}
+
+    </select>
+
+</div>
+
+
+            <!-- BUTTONS -->
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('vendors') }}"
+                    class="btn-secondary">
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn">
+                    Register Vendor
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

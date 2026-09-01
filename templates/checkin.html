@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+
+{% block title %}
+EventSphere - Participant Check-in
+{% endblock %}
+
+{% block content %}
+
+<div class="form-page">
+
+    <div class="form-container">
+
+        <div class="form-header">
+
+            <p class="section-label">
+                EVENTSPHERE
+            </p>
+
+            <h1>
+                Participant Check-in
+            </h1>
+
+            <p>
+                Enter the ticket ID to check in a participant.
+            </p>
+
+        </div>
+
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="ticket_id">
+                    Ticket ID
+                </label>
+
+                <input
+                    type="text"
+                    id="ticket_id"
+                    name="ticket_id"
+                    placeholder="Example: ES-A1B2C3D4"
+                    required
+                >
+
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('dashboard') }}"
+                    class="btn-secondary">
+                    Cancel
+                </a>
+
+                <button
+                    type="submit"
+                    class="btn">
+                    Check In
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

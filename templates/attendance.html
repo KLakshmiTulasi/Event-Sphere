@@ -1,0 +1,255 @@
+{% extends "base.html" %}
+
+{% block title %}
+EventSphere - Attendance
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="section-label">
+                EVENTSPHERE
+            </p>
+
+            <h1>
+                Attendance
+            </h1>
+
+            <p>
+                Track participant check-in and attendance.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('dashboard') }}"
+            class="btn">
+            Back to Dashboard
+        </a>
+
+    </div>
+
+
+    <!-- ATTENDANCE SUMMARY -->
+
+    <div class="dashboard-cards">
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                👥
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ total_participants }}
+                </h2>
+
+                <p>
+                    Total Participants
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                ✅
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ checked_in_count }}
+                </h2>
+
+                <p>
+                    Checked In
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                ⏳
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ not_checked_in_count }}
+                </h2>
+
+                <p>
+                    Not Checked In
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- ATTENDANCE TABLE -->
+
+    <section class="recent-section">
+
+        <div class="section-title-row">
+
+            <h2>
+                Participant Attendance
+            </h2>
+
+        </div>
+
+
+        {% if participants %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Participant
+                        </th>
+
+                        <th>
+                            Email
+                        </th>
+
+                        <th>
+                            Event
+                        </th>
+
+                        <th>
+                            Ticket ID
+                        </th>
+
+                        <th>
+                            Status
+                        </th>
+
+                        <th>
+                            Check-in Time
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for participant in participants %}
+
+                    <tr>
+
+                        <td>
+                            {{ participant["name"] }}
+                        </td>
+
+                        <td>
+                            {{ participant["email"] }}
+                        </td>
+
+                        <td>
+                            {{ participant["event_name"] }}
+                        </td>
+
+                        <td>
+                            {{ participant["ticket_id"] }}
+                        </td>
+
+
+                        <td>
+
+                            {% if participant["checked_in"] == 1 %}
+
+                                <span class="status-success">
+                                    ✅ Checked In
+                                </span>
+
+                            {% else %}
+
+                                <span class="status-pending">
+                                    ⏳ Not Checked In
+                                </span>
+
+                            {% endif %}
+
+                        </td>
+
+
+                        <td>
+
+                            {% if participant["check_in_time"] %}
+
+                                {{ participant["check_in_time"] }}
+
+                            {% else %}
+
+                                —
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-dashboard">
+
+            <div>
+                👥
+            </div>
+
+            <h3>
+                No Participants Yet
+            </h3>
+
+            <p>
+                Register participants to start tracking attendance.
+            </p>
+
+            <a
+                href="{{ url_for('register') }}"
+                class="btn">
+                Register Participant
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</div>
+
+{% endblock %}
