@@ -1,0 +1,267 @@
+{% extends "base.html" %}
+
+{% block title %}
+EventSphere - Budget
+{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <!-- HEADER -->
+
+    <div class="dashboard-header">
+
+        <div>
+
+            <p class="section-label">
+                EVENTSPHERE
+            </p>
+
+            <h1>
+                Budget Management
+            </h1>
+
+            <p>
+                Monitor event budgets and expenses.
+            </p>
+
+        </div>
+
+        <a
+            href="{{ url_for('add_expense') }}"
+            class="btn">
+            + Add Expense
+        </a>
+
+        <a 
+            href="{{ url_for('expenses') }}" 
+            class="btn">
+            View Expenses
+        </a>
+
+    </div>
+
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="dashboard-cards">
+
+        <!-- TOTAL BUDGET -->
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                💰
+            </div>
+
+            <div>
+
+                <h2>
+                    ₹{{ "%.2f"|format(total_budget) }}
+                </h2>
+
+                <p>
+                    Total Budget
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- TOTAL EXPENSES -->
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                💸
+            </div>
+
+            <div>
+
+                <h2>
+                    ₹{{ "%.2f"|format(total_expenses) }}
+                </h2>
+
+                <p>
+                    Total Expenses
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- REMAINING -->
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                💵
+            </div>
+
+            <div>
+
+                <h2>
+                    ₹{{ "%.2f"|format(remaining_budget) }}
+                </h2>
+
+                <p>
+                    Remaining Budget
+                </p>
+
+            </div>
+
+        </div>
+
+
+        <!-- UTILIZATION -->
+
+        <div class="dashboard-card">
+
+            <div class="stat-icon">
+                📊
+            </div>
+
+            <div>
+
+                <h2>
+                    {{ budget_utilization }}%
+                </h2>
+
+                <p>
+                    Budget Utilization
+                </p>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- EVENT BUDGET REPORT -->
+
+    <section class="recent-section">
+
+        <div class="section-title-row">
+
+            <h2>
+                Event-wise Budget Report
+            </h2>
+
+        </div>
+
+
+        {% if budget_reports %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Event
+                        </th>
+
+                        <th>
+                            Budget
+                        </th>
+
+                        <th>
+                            Expenses
+                        </th>
+
+                        <th>
+                            Remaining
+                        </th>
+
+                        <th>
+                            Utilization
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for event in budget_reports %}
+
+                    <tr>
+
+                        <td>
+                            {{ event["name"] }}
+                        </td>
+
+                        <td>
+                            ₹{{ "%.2f"|format(event["budget"] or 0) }}
+                        </td>
+
+                        <td>
+                            ₹{{ "%.2f"|format(event["expenses"] or 0) }}
+                        </td>
+
+                        <td>
+                            ₹{{ "%.2f"|format(event["remaining"] or 0) }}
+                        </td>
+
+                        <td>
+
+                            {% if event["budget"] and event["budget"] > 0 %}
+
+                                {{ (
+                                    (event["expenses"] or 0)
+                                    * 100
+                                    / event["budget"]
+                                ) | round(1) }}%
+
+                            {% else %}
+
+                                0%
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-dashboard">
+
+            <div>
+                💰
+            </div>
+
+            <h3>
+                No Budget Data
+            </h3>
+
+            <p>
+                Create an event with a budget to view budget information.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+</div>
+
+{% endblock %}

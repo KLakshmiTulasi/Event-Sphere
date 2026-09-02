@@ -247,6 +247,190 @@ EventSphere - Reports
 
     </section>
 
+
+    <!-- VENUE UTILIZATION -->
+
+    <section class="recent-section">
+
+        <div class="section-title-row">
+
+            <h2>
+                🏢 Venue Utilization
+            </h2>
+
+        </div>
+
+
+        {% if venue_usage %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Venue
+                        </th>
+
+                        <th>
+                            Capacity
+                        </th>
+
+                        <th>
+                            Events
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for venue in venue_usage %}
+
+                    <tr>
+
+                        <td>
+                            {{ venue["venue_name"] }}
+                        </td>
+
+                        <td>
+                            {{ venue["capacity"] }}
+                        </td>
+
+                        <td>
+                            {{ venue["event_count"] }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-dashboard">
+
+            <div>
+                🏢
+            </div>
+
+            <h3>
+                No Venue Data
+            </h3>
+
+            <p>
+                Add venues and assign them to events to view venue utilization.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
+    <!-- RESOURCE USAGE -->
+
+    <section class="recent-section">
+
+        <div class="section-title-row">
+
+            <h2>
+                📦 Resource Usage
+            </h2>
+
+        </div>
+
+
+        {% if resource_usage %}
+
+        <div class="table-container">
+
+            <table>
+
+                <thead>
+
+                    <tr>
+
+                        <th>
+                            Resource
+                        </th>
+
+                        <th>
+                            Total Quantity
+                        </th>
+
+                        <th>
+                            Allocated Quantity
+                        </th>
+
+                    </tr>
+
+                </thead>
+
+
+                <tbody>
+
+                    {% for resource in resource_usage %}
+
+                    <tr>
+
+                        <td>
+                            {{ resource["resource_name"] }}
+                        </td>
+
+                        <td>
+                            {{ resource["total_quantity"] }}
+                        </td>
+
+                        <td>
+                            {{ resource["allocated_quantity"] }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-dashboard">
+
+            <div>
+                📦
+            </div>
+
+            <h3>
+                No Resource Data
+            </h3>
+
+            <p>
+                Add and allocate resources to view resource usage.
+            </p>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+
 </div>
 
 {% endblock %}
+

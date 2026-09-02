@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}
+Add Resource - EventSphere
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="dashboard-header">
+        <div>
+            <p class="section-label">RESOURCE MANAGEMENT</p>
+            <h1>Add Resource</h1>
+            <p>Add equipment or resources required for your events.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+
+        <form method="POST">
+
+            <div class="form-group">
+
+                <label for="name">
+                    Resource Name
+                </label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Example: Projector"
+                    required
+                >
+
+            </div>
+
+            <div class="form-group">
+
+                <label for="quantity">
+                    Quantity
+                </label>
+
+                <input
+                    type="number"
+                    id="quantity"
+                    name="quantity"
+                    min="1"
+                    placeholder="Example: 5"
+                    required
+                >
+
+            </div>
+
+            <div class="form-actions">
+
+                <button type="submit" class="btn">
+                    Add Resource
+                </button>
+
+                <a href="{{ url_for('resources') }}" class="btn secondary">
+                    Cancel
+                </a>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

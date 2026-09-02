@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}
+EventSphere - Add Expense
+{% endblock %}
+
+{% block content %}
+
+<div class="form-container">
+
+    <div class="form-header">
+
+        <p class="section-label">
+            BUDGET MANAGEMENT
+        </p>
+
+        <h1>
+            Add Expense
+        </h1>
+
+        <p>
+            Record an expense for an event.
+        </p>
+
+    </div>
+
+
+    <form method="POST">
+
+        <!-- EVENT -->
+
+        <label for="event_id">
+            Event *
+        </label>
+
+        <select
+            id="event_id"
+            name="event_id"
+            required>
+
+            <option value="">
+                -- Select Event --
+            </option>
+
+            {% for event in events %}
+
+                <option value="{{ event['id'] }}">
+                    {{ event['name'] }} - {{ event['date'] }}
+                </option>
+
+            {% endfor %}
+
+        </select>
+
+
+        <!-- CATEGORY -->
+
+        <label for="category">
+            Expense Category *
+        </label>
+
+        <select
+            id="category"
+            name="category"
+            required>
+
+            <option value="">
+                -- Select Category --
+            </option>
+
+            <option value="Venue">
+                Venue
+            </option>
+
+            <option value="Catering">
+                Catering
+            </option>
+
+            <option value="Staffing">
+                Staffing
+            </option>
+
+            <option value="Marketing">
+                Marketing
+            </option>
+
+            <option value="Logistics">
+                Logistics
+            </option>
+
+            <option value="Equipment">
+                Equipment
+            </option>
+
+        </select>
+
+
+        <!-- DESCRIPTION -->
+
+        <label for="description">
+            Description
+        </label>
+
+        <textarea
+            id="description"
+            name="description"
+            rows="4"
+            placeholder="Enter expense details..."></textarea>
+
+
+        <!-- AMOUNT -->
+
+        <label for="amount">
+            Expense Amount *
+        </label>
+
+        <input
+            type="number"
+            id="amount"
+            name="amount"
+            min="0.01"
+            step="0.01"
+            placeholder="Example: 5000"
+            required
+        >
+
+
+        <!-- BUTTONS -->
+
+        <div class="form-buttons">
+
+            <a
+                href="{{ url_for('dashboard') }}"
+                class="btn cancel-btn">
+                Cancel
+            </a>
+
+            <button
+                type="submit"
+                class="btn">
+                Add Expense
+            </button>
+
+        </div>
+
+    </form>
+
+</div>
+
+{% endblock %}

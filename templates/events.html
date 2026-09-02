@@ -117,6 +117,18 @@ Events - EventSphere
 
                     </div>
 
+                                        <!-- EDIT EVENT -->
+
+                    <div class="event-actions">
+
+                        <a
+                            href="{{ url_for('edit_event', event_id=event['id']) }}"
+                            class="btn">
+                            ✏️ Edit Event
+                        </a>
+
+                    </div>
+
                 </div>
 
             {% endfor %}

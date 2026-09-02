@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+
+{% block title %}EventSphere - Notifications{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+
+        <div>
+            <p class="section-label">EVENTSPHERE</p>
+            <h1>Notifications</h1>
+            <p>View event notifications and important updates.</p>
+        </div>
+
+        <a href="{{ url_for('add_notification') }}" class="btn">
+            + Add Notification
+        </a>
+
+        <a href="{{ url_for('generate_reminders') }}" class="btn">
+        ⏰ Generate Reminders
+    </a>
+
+    </div>
+
+
+    {% if notifications %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+
+                <tr>
+                    <th>Event</th>
+                    <th>Type</th>
+                    <th>Message</th>
+                    <th>Date</th>
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for notification in notifications %}
+
+                <tr>
+
+                    <td>
+                        {{ notification["event_name"] or "General" }}
+                    </td>
+
+                    <td>
+                        {{ notification["notification_type"] }}
+                    </td>
+
+                    <td>
+                        {{ notification["message"] }}
+                    </td>
+
+                    <td>
+                        {{ notification["created_at"] }}
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-dashboard">
+
+        <div>🔔</div>
+
+        <h3>No Notifications Yet</h3>
+
+        <p>
+            Notifications and event updates will appear here.
+        </p>
+
+        <a href="{{ url_for('add_notification') }}" class="btn">
+            Add Notification
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block title %}
+Resources - EventSphere
+{% endblock %}
+
+{% block content %}
+
+<div class="page-container">
+
+    <div class="dashboard-header">
+        <div>
+            <p class="section-label">RESOURCE MANAGEMENT</p>
+            <h1>Resources</h1>
+            <p>Manage equipment and resources required for events.</p>
+        </div>
+
+        <a href="{{ url_for('add_resource') }}" class="btn">
+            + Add Resource
+        </a>
+    </div>
+
+    {% if resources %}
+
+        <div class="events-container">
+
+            {% for resource in resources %}
+
+                <div class="event-card">
+
+                    <div class="event-card-top">
+                        <span class="event-badge">RESOURCE</span>
+                    </div>
+
+                    <h2>{{ resource["name"] }}</h2>
+
+                    <div class="event-details">
+
+                        <p>
+                            📦 <strong>Total Quantity:</strong>
+                            {{ resource["quantity"] }}
+                        </p>
+
+                        <p>
+                            ✅ <strong>Available:</strong>
+                            {{ resource["available_quantity"] }}
+                        </p>
+
+                        <p>
+                            📊 <strong>Status:</strong>
+                            {{ resource["status"] }}
+                        </p>
+
+                    </div>
+
+                    <div class="resource-card">
+
+    <h2>
+        {{ resource["name"] }}
+    </h2>
+
+    <p>
+        Total Quantity:
+        {{ resource["quantity"] }}
+    </p>
+
+    <p>
+        Available:
+        {{ resource["available_quantity"] }}
+    </p>
+
+    <p>
+        Status:
+        {{ resource["status"] }}
+    </p>
+
+    <a
+        href="{{ url_for('allocate_resource', resource_id=resource['id']) }}"
+        class="btn">
+        ➕ Allocate
+    </a>
+
+</div>
+
+                </div>
+
+            {% endfor %}
+
+        </div>
+
+    {% else %}
+
+        <div class="empty-dashboard">
+
+            <div>📦</div>
+
+            <h3>No Resources Yet</h3>
+
+            <p>Add your first event resource to get started.</p>
+
+            <a href="{{ url_for('add_resource') }}" class="btn">
+                Add Resource
+            </a>
+
+        </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

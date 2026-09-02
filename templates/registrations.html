@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Participant Registration - EventSphere</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f7fb;
+            margin: 0;
+            padding: 40px;
+            color: #1f2937;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+        }
+
+        .subtitle {
+            color: #6b7280;
+            margin-top: 6px;
+        }
+
+        .register-btn {
+            background: #6258e8;
+            color: white;
+            text-decoration: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+
+        .card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 3px 15px rgba(0,0,0,0.06);
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th {
+            text-align: left;
+            font-size: 12px;
+            color: #6b7280;
+            padding: 15px 10px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        td {
+            padding: 16px 10px;
+            border-bottom: 1px solid #eef0f3;
+            font-size: 14px;
+        }
+
+        .status {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .checked {
+            background: #dff7ed;
+            color: #16845b;
+        }
+
+        .not-checked {
+            background: #fff4d6;
+            color: #a36b00;
+        }
+
+        .checkin-btn {
+            background: #20a779;
+            color: white;
+            border: none;
+            padding: 8px 13px;
+            border-radius: 7px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .checkin-btn:hover {
+            opacity: 0.9;
+        }
+
+        .ticket-btn {
+            display: inline-block;
+            background: #6258e8;
+            color: white;
+            text-decoration: none;
+            padding: 8px 13px;
+            border-radius: 7px;
+            font-weight: bold;
+        }
+
+        .ticket-btn:hover {
+            opacity: 0.9;
+        }
+
+        .flash {
+            padding: 12px 15px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background: #e8f7ef;
+            color: #147a4b;
+        }
+
+        .empty {
+            text-align: center;
+            padding: 40px;
+            color: #777;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <!-- HEADER -->
+
+    <div class="header">
+
+        <div>
+
+            <h1>Participant Registration</h1>
+
+            <div class="subtitle">
+                Manage registered participants and tickets
+            </div>
+
+        </div>
+
+        <a href="{{ url_for('register') }}"
+           class="register-btn">
+            + Register Participant
+        </a>
+
+    </div>
+
+
+    <!-- FLASH MESSAGES -->
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+        {% if messages %}
+
+            {% for category, message in messages %}
+
+                <div class="flash">
+                    {{ message }}
+                </div>
+
+            {% endfor %}
+
+        {% endif %}
+
+    {% endwith %}
+
+
+    <!-- REGISTRATION TABLE -->
+
+    <div class="card">
+
+        {% if participants %}
+
+        <table>
+
+            <thead>
+
+                <tr>
+
+                    <th>REGISTRATION ID</th>
+
+                    <th>NAME</th>
+
+                    <th>EMAIL</th>
+
+                    <th>PHONE</th>
+
+                    <th>EVENT</th>
+
+                    <th>STATUS</th>
+
+                    <th>TICKET</th>
+
+                </tr>
+
+            </thead>
+
+
+            <tbody>
+
+                {% for participant in participants %}
+
+                <tr>
+
+                    <td>
+                        <strong>
+                            REG{{ "%05d" | format(participant["id"]) }}
+                        </strong>
+                    </td>
+
+
+                    <td>
+                        {{ participant["name"] }}
+                    </td>
+
+
+                    <td>
+                        {{ participant["email"] }}
+                    </td>
+
+
+                    <td>
+                        {{ participant["phone"] or "-" }}
+                    </td>
+
+
+                    <td>
+                        {{ participant["event_name"] or "Unknown Event" }}
+                    </td>
+
+
+                    <td>
+
+                        {% if participant["checked_in"] == 1 %}
+
+                            <span class="status checked">
+                                ✓ Checked In
+                            </span>
+
+                        {% else %}
+
+                            <form method="POST"
+                                  action="{{ url_for(
+                                      'checkin_participant',
+                                      participant_id=participant['id']
+                                  ) }}">
+
+                                <button type="submit"
+                                        class="checkin-btn">
+
+                                    Check In
+
+                                </button>
+
+                            </form>
+
+                        {% endif %}
+
+                    </td>
+
+
+                    <td>
+
+                        <a href="{{ url_for(
+                            'ticket',
+                            ticket_id=participant['ticket_id']
+                        ) }}"
+                           class="ticket-btn">
+
+                            🎟 View Ticket
+
+                        </a>
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+        {% else %}
+
+            <div class="empty">
+
+                <h3>No participants registered yet.</h3>
+
+                <p>
+                    Register a participant to see them here.
+                </p>
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

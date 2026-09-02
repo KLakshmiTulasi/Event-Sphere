@@ -52,12 +52,12 @@ EventSphere - Dashboard
 
             <div>
 
-                <h2>
-                    {{ event_count }}
-                </h2>
-
-                <p>
+                
+                <h3>
                     Total Events
+                </h3>
+                <p>
+                    {{ event_count }}
                 </p>
 
             </div>
@@ -73,12 +73,11 @@ EventSphere - Dashboard
 
             <div>
 
-                <h2>
-                    {{ participant_count }}
-                </h2>
-
-                <p>
+                <h3>
                     Participants
+                </h3>
+                <p>
+                    {{ participant_count }}
                 </p>
 
             </div>
@@ -94,12 +93,11 @@ EventSphere - Dashboard
 
             <div>
 
-                <h2>
-                    {{ venue_count }}
-                </h2>
-
-                <p>
+                 <h3>
                     Venues
+                 </h3>
+                <p>
+                    {{ venue_count }}
                 </p>
 
             </div>
@@ -112,20 +110,58 @@ EventSphere - Dashboard
             <div class="stat-icon">
                 🤝
             </div>
-
             <div>
 
-                <h2>
-                    {{ vendor_count }}
-                </h2>
-
-                <p>
+                <h3>
                     Vendors
+                </h3>
+                <p>
+                    {{ vendor_count }}
                 </p>
 
             </div>
 
         </div>
+
+        <div class="dashboard-card">
+    <div class="stat-icon">📦</div>
+    <div>
+        <h3>Total Resources</h3>
+        <p>{{ resource_count }}</p>
+    </div>
+</div>
+
+<div class="dashboard-card">
+    <div class="stat-icon">💰</div>
+    <div>
+        <h3>Total Budget</h3>
+        <p>₹{{ "%.2f"|format(total_budget) }}</p>
+    </div>
+</div>
+
+<div class="dashboard-card">
+    <div class="stat-icon">💸</div>
+    <div>
+        <h3>Total Expenses</h3>
+        <p>₹{{ "%.2f"|format(total_expenses) }}</p>
+    </div>
+</div>
+
+<div class="dashboard-card">
+    <div class="stat-icon">💵</div>
+    <div>
+        <h3>Remaining Budget</h3>
+        <p>₹{{ "%.2f"|format(remaining_budget) }}</p>
+    </div>
+</div>
+
+<div class="dashboard-card">
+    <div class="stat-icon">📊</div>
+    <div>
+        <h3>Budget Utilization</h3>
+        <p>{{ budget_utilization }}%</p>
+    </div>
+</div>
 
 
     </div>
@@ -234,7 +270,7 @@ EventSphere - Dashboard
 
 
            <a
-                href="{{ url_for('register') }}"
+                href="{{ url_for('registrations') }}"
                 class="quick-card">
 
                 <span>👥</span>
@@ -248,6 +284,26 @@ EventSphere - Dashboard
                 </div>
 
             </a>
+
+            <!-- RESOURCES -->
+
+<a 
+    href="{{ url_for('resources') }}" 
+    class="quick-card"> 
+
+    <span>📦</span> 
+
+    <div> 
+
+        <h3>Resources</h3> 
+
+        <p> 
+            Manage event resources 
+        </p> 
+
+    </div> 
+
+</a>
 
             <!-- FIND TICKET -->
 

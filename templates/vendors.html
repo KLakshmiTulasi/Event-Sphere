@@ -23,7 +23,7 @@ EventSphere - Vendors
             </h1>
 
             <p>
-                Manage all your event vendors from here.
+                Manage vendors and their event assignments.
             </p>
 
         </div>
@@ -77,10 +77,34 @@ EventSphere - Vendors
                             {{ vendor["email"] or "Not provided" }}
                         </p>
 
-                        <p>
-                            <strong>Event:</strong>
-                            {{ vendor["event_name"] or "Not assigned" }}
-                        </p>
+
+                        <!-- EVENT ASSIGNMENT -->
+
+                        {% if vendor["event_name"] %}
+
+                            <p>
+                                <strong>Assigned Event:</strong>
+                                {{ vendor["event_name"] }}
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+                                ✅ Assigned
+                            </p>
+
+                        {% else %}
+
+                            <p>
+                                <strong>Assigned Event:</strong>
+                                Not assigned
+                            </p>
+
+                            <p>
+                                <strong>Status:</strong>
+                                ⚠️ Unassigned
+                            </p>
+
+                        {% endif %}
 
                     </div>
 
