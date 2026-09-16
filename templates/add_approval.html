@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+
+{% block title %}EventSphere - Add Approval Request{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <div>
+            <p class="section-label">EVENTSPHERE</p>
+            <h1>Add Approval Request</h1>
+            <p>Create a request that requires organizer approval.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label for="event_id">Event</label>
+
+                <select id="event_id" name="event_id" required>
+                    <option value="">Select Event</option>
+
+                    {% for event in events %}
+                    <option value="{{ event['id'] }}">
+                        {{ event['name'] }}
+                    </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="request_type">Request Type</label>
+
+                <select id="request_type" name="request_type" required>
+
+                    <option value="">Select Request Type</option>
+
+                    <option value="Event Approval">
+                        Event Approval
+                    </option>
+
+                    <option value="Venue Approval">
+                        Venue Approval
+                    </option>
+
+                    <option value="Resource Approval">
+                        Resource Approval
+                    </option>
+
+                    <option value="Vendor Approval">
+                        Vendor Approval
+                    </option>
+
+                    <option value="Budget Approval">
+                        Budget Approval
+                    </option>
+
+                    <option value="Other">
+                        Other
+                    </option>
+
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="description">Description</label>
+
+                <textarea
+                    id="description"
+                    name="description"
+                    rows="5"
+                    placeholder="Enter details of the approval request"
+                    required
+                ></textarea>
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('approvals') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn">
+                    Submit Request
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}

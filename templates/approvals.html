@@ -1,0 +1,146 @@
+{% extends "base.html" %}
+
+{% block title %}EventSphere - Approvals{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <div>
+            <p class="section-label">EVENTSPHERE</p>
+            <h1>Approval Management</h1>
+            <p>Review and manage event approval requests.</p>
+        </div>
+
+        <a href="{{ url_for('add_approval') }}" class="btn">
+            + Add Approval Request
+        </a>
+    </div>
+
+
+    {% if approvals %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Request Type</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for approval in approvals %}
+
+                <tr>
+
+                    <td>
+                        {{ approval["event_name"] or "Not assigned" }}
+                    </td>
+
+                    <td>
+                        {{ approval["request_type"] }}
+                    </td>
+
+                    <td>
+                        {{ approval["description"] }}
+                    </td>
+
+                    <td>
+                        {% if approval["status"] == "Approved" %}
+
+                            <span>✅ Approved</span>
+
+                        {% elif approval["status"] == "Rejected" %}
+
+                            <span>❌ Rejected</span>
+
+                        {% else %}
+
+                            <span>⏳ Pending</span>
+
+                        {% endif %}
+                    </td>
+
+                    <td>
+                        {{ approval["created_at"] }}
+                    </td>
+
+                    <td>
+
+                        {% if approval["status"] == "Pending" %}
+
+                        <form
+                            method="POST"
+                            action="{{ url_for('update_approval', approval_id=approval['id']) }}"
+                        >
+
+                            <button
+                                type="submit"
+                                name="status"
+                                value="Approved"
+                                class="btn"
+                            >
+                                Approve
+                            </button>
+
+                            <button
+                                type="submit"
+                                name="status"
+                                value="Rejected"
+                                class="btn btn-secondary"
+                            >
+                                Reject
+                            </button>
+
+                        </form>
+
+                        {% else %}
+
+                            <span>Completed</span>
+
+                        {% endif %}
+
+                    </td>
+
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-dashboard">
+
+        <div>✅</div>
+
+        <h3>No Approval Requests</h3>
+
+        <p>
+            Create an approval request to start managing approvals.
+        </p>
+
+        <a href="{{ url_for('add_approval') }}" class="btn">
+            Add Approval Request
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

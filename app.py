@@ -1,8 +1,10 @@
-from flask import Flask, render_template, request, redirect, url_for, flash
+from flask import Flask, render_template, request, redirect, url_for, flash,Response
 import sqlite3
 import qrcode
 import uuid
 import os
+import csv
+from io import StringIO
 
 app = Flask(__name__)
 
@@ -153,6 +155,33 @@ def init_db():
             FOREIGN KEY (event_id) REFERENCES events(id)
         )
     """) 
+
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS sponsors (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        event_id INTEGER NOT NULL,
+        name TEXT NOT NULL,
+        contact_person TEXT,
+        phone TEXT,
+        email TEXT,
+        sponsorship_type TEXT NOT NULL,
+        amount REAL NOT NULL,
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (event_id) REFERENCES events(id)
+    )
+""")
+
+    connection.execute("""
+    CREATE TABLE IF NOT EXISTS approvals (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        event_id INTEGER NOT NULL,
+        request_type TEXT NOT NULL,
+        description TEXT NOT NULL,
+        status TEXT NOT NULL DEFAULT 'Pending',
+        created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+        FOREIGN KEY (event_id) REFERENCES events(id)
+    )
+""")
    
 
     # -----------------------------------------
@@ -261,6 +290,35 @@ def dashboard():
         LIMIT 5
     """).fetchall()
 
+    
+
+    analytics_data = connection.execute("""
+        SELECT
+            events.name AS event_name,
+            events.budget AS budget,
+            COALESCE(SUM(expenses.amount), 0) AS expenses
+        FROM events
+        LEFT JOIN expenses
+            ON events.id = expenses.event_id
+        GROUP BY events.id
+        ORDER BY events.date ASC
+    """).fetchall()
+
+    analytics_data = [dict(row) for row in analytics_data]
+
+    participant_analytics = connection.execute("""
+    SELECT
+        events.name AS event_name,
+        COUNT(participants.id) AS participants
+    FROM events
+    LEFT JOIN participants
+        ON events.id = participants.event_id
+    GROUP BY events.id
+    ORDER BY events.date ASC
+    """).fetchall()
+
+    participant_analytics = [dict(row) for row in participant_analytics]
+
     connection.close()
 
     return render_template(
@@ -274,7 +332,9 @@ def dashboard():
         total_expenses=total_expenses,
         remaining_budget=remaining_budget,
         budget_utilization=budget_utilization,
-        recent_events=recent_events
+        recent_events=recent_events,
+        analytics_data=analytics_data,
+        participant_analytics=participant_analytics
     )
 
 
@@ -1699,6 +1759,269 @@ def notifications():
         "notifications.html",
         notifications=notifications_list
     )
+
+
+@app.route("/add-sponsor", methods=["GET", "POST"])
+def add_sponsor():
+    connection = get_db_connection()
+
+    if request.method == "POST":
+
+        event_id = request.form.get("event_id", "").strip()
+        name = request.form.get("name", "").strip()
+        contact_person = request.form.get("contact_person", "").strip()
+        phone = request.form.get("phone", "").strip()
+        email = request.form.get("email", "").strip()
+        sponsorship_type = request.form.get("sponsorship_type", "").strip()
+        amount = request.form.get("amount", "").strip()
+
+        if not event_id:
+            connection.close()
+            flash("Please select an event.", "error")
+            return redirect(url_for("add_sponsor"))
+
+        if not name:
+            connection.close()
+            flash("Please enter the sponsor name.", "error")
+            return redirect(url_for("add_sponsor"))
+
+        if not sponsorship_type:
+            connection.close()
+            flash("Please select a sponsorship type.", "error")
+            return redirect(url_for("add_sponsor"))
+
+        if not amount:
+            connection.close()
+            flash("Please enter the sponsorship amount.", "error")
+            return redirect(url_for("add_sponsor"))
+
+        try:
+            amount = float(amount)
+
+            if amount < 0:
+                raise ValueError
+
+        except ValueError:
+            connection.close()
+            flash("Please enter a valid sponsorship amount.", "error")
+            return redirect(url_for("add_sponsor"))
+
+        event = connection.execute("""
+            SELECT *
+            FROM events
+            WHERE id = ?
+        """, (event_id,)).fetchone()
+
+        if event is None:
+            connection.close()
+            flash("Event not found.", "error")
+            return redirect(url_for("add_sponsor"))
+
+        connection.execute("""
+            INSERT INTO sponsors
+            (
+                event_id,
+                name,
+                contact_person,
+                phone,
+                email,
+                sponsorship_type,
+                amount
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?)
+        """, (
+            event_id,
+            name,
+            contact_person,
+            phone,
+            email,
+            sponsorship_type,
+            amount
+        ))
+
+        connection.commit()
+        connection.close()
+
+        flash("Sponsor added successfully!", "success")
+
+        return redirect(url_for("sponsors"))
+
+    events = connection.execute("""
+        SELECT *
+        FROM events
+        ORDER BY date ASC, start_time ASC
+    """).fetchall()
+
+    connection.close()
+
+    return render_template(
+        "add_sponsor.html",
+        events=events
+    )
+
+
+@app.route("/sponsors")
+def sponsors():
+    connection = get_db_connection()
+
+    sponsors_list = connection.execute("""
+        SELECT
+            sponsors.*,
+            events.name AS event_name
+        FROM sponsors
+        LEFT JOIN events
+            ON sponsors.event_id = events.id
+        ORDER BY sponsors.id DESC
+    """).fetchall()
+
+    total_sponsorship = connection.execute("""
+        SELECT COALESCE(SUM(amount), 0)
+        FROM sponsors
+    """).fetchone()[0]
+
+    sponsor_count = connection.execute("""
+        SELECT COUNT(*)
+        FROM sponsors
+    """).fetchone()[0]
+
+    connection.close()
+
+    return render_template(
+        "sponsors.html",
+        sponsors=sponsors_list,
+        total_sponsorship=total_sponsorship,
+        sponsor_count=sponsor_count
+    )
+
+@app.route("/add-approval", methods=["GET", "POST"])
+def add_approval():
+    connection = get_db_connection()
+
+    if request.method == "POST":
+
+        event_id = request.form.get("event_id", "").strip()
+        request_type = request.form.get("request_type", "").strip()
+        description = request.form.get("description", "").strip()
+
+        if not event_id:
+            connection.close()
+            flash("Please select an event.", "error")
+            return redirect(url_for("add_approval"))
+
+        if not request_type:
+            connection.close()
+            flash("Please select a request type.", "error")
+            return redirect(url_for("add_approval"))
+
+        if not description:
+            connection.close()
+            flash("Please enter a description.", "error")
+            return redirect(url_for("add_approval"))
+
+        event = connection.execute("""
+            SELECT *
+            FROM events
+            WHERE id = ?
+        """, (event_id,)).fetchone()
+
+        if event is None:
+            connection.close()
+            flash("Event not found.", "error")
+            return redirect(url_for("add_approval"))
+
+        connection.execute("""
+            INSERT INTO approvals
+            (
+                event_id,
+                request_type,
+                description,
+                status
+            )
+            VALUES (?, ?, ?, ?)
+        """, (
+            event_id,
+            request_type,
+            description,
+            "Pending"
+        ))
+
+        connection.commit()
+        connection.close()
+
+        flash("Approval request submitted successfully!", "success")
+
+        return redirect(url_for("approvals"))
+
+    events = connection.execute("""
+        SELECT *
+        FROM events
+        ORDER BY date ASC, start_time ASC
+    """).fetchall()
+
+    connection.close()
+
+    return render_template(
+        "add_approval.html",
+        events=events
+    )
+
+@app.route("/approvals")
+def approvals():
+    connection = get_db_connection()
+
+    approvals_list = connection.execute("""
+        SELECT
+            approvals.*,
+            events.name AS event_name
+        FROM approvals
+        LEFT JOIN events
+            ON approvals.event_id = events.id
+        ORDER BY approvals.id DESC
+    """).fetchall()
+
+    connection.close()
+
+    return render_template(
+        "approvals.html",
+        approvals=approvals_list
+    )
+
+@app.route("/update-approval/<int:approval_id>", methods=["POST"])
+def update_approval(approval_id):
+    status = request.form.get("status", "").strip()
+
+    if status not in ["Approved", "Rejected"]:
+        flash("Invalid approval status.", "error")
+        return redirect(url_for("approvals"))
+
+    connection = get_db_connection()
+
+    approval = connection.execute("""
+        SELECT *
+        FROM approvals
+        WHERE id = ?
+    """, (approval_id,)).fetchone()
+
+    if approval is None:
+        connection.close()
+        flash("Approval request not found.", "error")
+        return redirect(url_for("approvals"))
+
+    connection.execute("""
+        UPDATE approvals
+        SET status = ?
+        WHERE id = ?
+    """, (status, approval_id))
+
+    connection.commit()
+    connection.close()
+
+    flash(
+        f"Approval request {status.lower()} successfully!",
+        "success"
+    )
+
+    return redirect(url_for("approvals"))
 # --------------------------------------------------
 # VENUE MANAGEMENT
 # --------------------------------------------------
@@ -2502,6 +2825,229 @@ def generate_reminders():
     )
 
     return redirect(url_for("notifications"))
+
+
+@app.route("/api/events", methods=["GET"])
+def api_get_events():
+    connection = get_db_connection()
+
+    events = connection.execute("""
+        SELECT *
+        FROM events
+        ORDER BY date ASC, start_time ASC
+    """).fetchall()
+
+    connection.close()
+
+    return {
+        "status": "success",
+        "count": len(events),
+        "events": [dict(event) for event in events]
+    }
+
+
+@app.route("/api/events/<int:event_id>", methods=["GET"])
+def api_get_event(event_id):
+    connection = get_db_connection()
+
+    event = connection.execute("""
+        SELECT *
+        FROM events
+        WHERE id = ?
+    """, (event_id,)).fetchone()
+
+    connection.close()
+
+    if event is None:
+        return {
+            "status": "error",
+            "message": "Event not found."
+        }, 404
+
+    return {
+        "status": "success",
+        "event": dict(event)
+    }
+
+@app.route("/api/events/<int:event_id>", methods=["PUT"])
+def api_update_event(event_id):
+    data = request.get_json()
+
+    if not data:
+        return {
+            "status": "error",
+            "message": "No JSON data provided."
+        }, 400
+
+    connection = get_db_connection()
+
+    event = connection.execute("""
+        SELECT *
+        FROM events
+        WHERE id = ?
+    """, (event_id,)).fetchone()
+
+    if event is None:
+        connection.close()
+        return {
+            "status": "error",
+            "message": "Event not found."
+        }, 404
+
+    name = data.get("name", event["name"])
+    description = data.get("description", event["description"])
+    date = data.get("date", event["date"])
+    start_time = data.get("start_time", event["start_time"])
+    end_time = data.get("end_time", event["end_time"])
+    venue = data.get("venue", event["venue"])
+    organizer = data.get("organizer", event["organizer"])
+    max_participants = data.get("max_participants", event["max_participants"])
+    budget = data.get("budget", event["budget"])
+
+    connection.execute("""
+        UPDATE events
+        SET name = ?,
+            description = ?,
+            date = ?,
+            start_time = ?,
+            end_time = ?,
+            venue = ?,
+            organizer = ?,
+            max_participants = ?,
+            budget = ?
+        WHERE id = ?
+    """, (
+        name,
+        description,
+        date,
+        start_time,
+        end_time,
+        venue,
+        organizer,
+        max_participants,
+        budget,
+        event_id
+    ))
+
+    connection.commit()
+
+    updated_event = connection.execute("""
+        SELECT *
+        FROM events
+        WHERE id = ?
+    """, (event_id,)).fetchone()
+
+    connection.close()
+
+    return {
+        "status": "success",
+        "message": "Event updated successfully.",
+        "event": dict(updated_event)
+    }
+
+
+@app.route("/api/events/<int:event_id>", methods=["DELETE"])
+def api_delete_event(event_id):
+    connection = get_db_connection()
+
+    event = connection.execute("""
+        SELECT *
+        FROM events
+        WHERE id = ?
+    """, (event_id,)).fetchone()
+
+    if event is None:
+        connection.close()
+        return {
+            "status": "error",
+            "message": "Event not found."
+        }, 404
+
+    connection.execute("""
+        DELETE FROM events
+        WHERE id = ?
+    """, (event_id,))
+
+    connection.commit()
+    connection.close()
+
+    return {
+        "status": "success",
+        "message": "Event deleted successfully."
+    }
+
+
+@app.route("/export-events-csv")
+def export_events_csv():
+    connection = get_db_connection()
+
+    events = connection.execute("""
+        SELECT
+            events.id,
+            events.name,
+            events.date,
+            events.start_time,
+            events.end_time,
+            events.venue,
+            events.organizer,
+            events.max_participants,
+            events.budget,
+            COALESCE(SUM(expenses.amount), 0) AS expenses
+        FROM events
+        LEFT JOIN expenses
+            ON events.id = expenses.event_id
+        GROUP BY events.id
+        ORDER BY events.date ASC, events.start_time ASC
+    """).fetchall()
+
+    connection.close()
+
+    output = StringIO()
+    writer = csv.writer(output)
+
+    writer.writerow([
+        "Event ID",
+        "Event Name",
+        "Date",
+        "Start Time",
+        "End Time",
+        "Venue",
+        "Organizer",
+        "Max Participants",
+        "Budget",
+        "Expenses",
+        "Remaining Budget"
+    ])
+
+    for event in events:
+        budget = event["budget"] or 0
+        expenses = event["expenses"] or 0
+        remaining = budget - expenses
+
+        writer.writerow([
+            event["id"],
+            event["name"],
+            event["date"],
+            event["start_time"],
+            event["end_time"],
+            event["venue"],
+            event["organizer"],
+            event["max_participants"],
+            budget,
+            expenses,
+            remaining
+        ])
+
+    response = Response(
+        output.getvalue(),
+        mimetype="text/csv"
+    )
+
+    response.headers["Content-Disposition"] = (
+        "attachment; filename=eventsphere_event_report.csv"
+    )
+
+    return response
 
 # --------------------------------------------------
 # UPDATE DATABASE

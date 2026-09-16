@@ -1,0 +1,104 @@
+{% extends "base.html" %}
+
+{% block title %}EventSphere - Sponsors{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <div>
+            <p class="section-label">EVENTSPHERE</p>
+            <h1>Sponsorship Management</h1>
+            <p>View and manage event sponsors.</p>
+        </div>
+
+        <a href="{{ url_for('add_sponsor') }}" class="btn">
+            + Add Sponsor
+        </a>
+    </div>
+
+
+    <div class="stats-grid">
+
+    <div class="stat-card">
+        <div class="stat-icon">🤝</div>
+        <div>
+            <h3>Total Sponsors</h3>
+            <p>{{ sponsor_count }}</p>
+        </div>
+    </div>
+
+    <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div>
+            <h3>Total Sponsorship</h3>
+            <p>₹{{ "%.2f"|format(total_sponsorship) }}</p>
+        </div>
+    </div>
+
+</div>
+
+    {% if sponsors %}
+
+    <div class="table-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Sponsor Name</th>
+                    <th>Contact Person</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Sponsorship Type</th>
+                    <th>Amount</th>
+                    <th>Date Added</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for sponsor in sponsors %}
+
+                <tr>
+                    <td>{{ sponsor["event_name"] or "Not assigned" }}</td>
+                    <td>{{ sponsor["name"] }}</td>
+                    <td>{{ sponsor["contact_person"] or "Not provided" }}</td>
+                    <td>{{ sponsor["phone"] or "Not provided" }}</td>
+                    <td>{{ sponsor["email"] or "Not provided" }}</td>
+                    <td>{{ sponsor["sponsorship_type"] }}</td>
+                    <td>₹{{ "%.2f"|format(sponsor["amount"]) }}</td>
+                    <td>{{ sponsor["created_at"] }}</td>
+                </tr>
+
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="empty-dashboard">
+
+        <div>🤝</div>
+
+        <h3>No Sponsors Yet</h3>
+
+        <p>Add a sponsor to start tracking sponsorship contributions.</p>
+
+        <a href="{{ url_for('add_sponsor') }}" class="btn">
+            Add Sponsor
+        </a>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+{% endblock %}

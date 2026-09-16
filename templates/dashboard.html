@@ -313,6 +313,34 @@ EventSphere - Dashboard
 
     </section>
 
+        <!-- ANALYTICS -->
+
+    <!-- ANALYTICS -->
+
+<section class="analytics-section">
+
+    <div class="section-title-row">
+
+        <h2>
+            Analytics Overview
+        </h2>
+
+    </div>
+
+    <div class="analytics-chart-card">
+
+        <canvas id="budgetExpenseChart"></canvas>
+
+    </div>
+
+    <div class="analytics-chart-card">
+
+        <canvas id="participantChart"></canvas>
+
+    </div>
+
+</section>
+
 
     <!-- RECENT EVENTS -->
 
@@ -412,4 +440,98 @@ EventSphere - Dashboard
 
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    const analyticsData = {{ analytics_data | tojson }};
+
+    const eventNames = analyticsData.map(item => item.event_name);
+    const budgets = analyticsData.map(item => item.budget);
+    const expenses = analyticsData.map(item => item.expenses);
+
+    const ctx = document.getElementById("budgetExpenseChart");
+
+    new Chart(ctx, {
+        type: "bar",
+
+        data: {
+            labels: eventNames,
+
+            datasets: [
+                {
+                    label: "Budget",
+                    data: budgets
+                },
+                {
+                    label: "Expenses",
+                    data: expenses
+                }
+            ]
+        },
+
+        options: {
+            responsive: true,
+
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Event-wise Budget vs Expenses"
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
+<script>
+    const participantData = {{ participant_analytics | tojson }};
+
+    const participantEventNames =
+        participantData.map(item => item.event_name);
+
+    const participantCounts =
+        participantData.map(item => item.participants);
+
+    const participantCtx =
+        document.getElementById("participantChart");
+
+    new Chart(participantCtx, {
+        type: "bar",
+
+        data: {
+            labels: participantEventNames,
+
+            datasets: [
+                {
+                    label: "Participants",
+                    data: participantCounts
+                }
+            ]
+        },
+
+        options: {
+            responsive: true,
+
+            plugins: {
+                title: {
+                    display: true,
+                    text: "Event-wise Participant Registrations"
+                }
+            },
+
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+</script>
+
 {% endblock %}
+

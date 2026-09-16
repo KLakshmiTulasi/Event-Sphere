@@ -1,0 +1,162 @@
+{% extends "base.html" %}
+
+{% block title %}EventSphere - Add Sponsor{% endblock %}
+
+{% block content %}
+
+<div class="dashboard-page">
+
+    <div class="dashboard-header">
+        <div>
+            <p class="section-label">EVENTSPHERE</p>
+            <h1>Add Sponsor</h1>
+            <p>Register and assign a sponsor to an event.</p>
+        </div>
+    </div>
+
+    <div class="form-container">
+
+        <form method="POST">
+
+            <div class="form-group">
+                <label for="event_id">Event</label>
+
+                <select id="event_id" name="event_id" required>
+
+                    <option value="">Select Event</option>
+
+                    {% for event in events %}
+                    <option value="{{ event['id'] }}">
+                        {{ event['name'] }}
+                    </option>
+                    {% endfor %}
+
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="name">Sponsor Name</label>
+
+                <input
+                    type="text"
+                    id="name"
+                    name="name"
+                    placeholder="Example: ABC Technologies"
+                    required
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="contact_person">Contact Person</label>
+
+                <input
+                    type="text"
+                    id="contact_person"
+                    name="contact_person"
+                    placeholder="Example: Rahul Kumar"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="phone">Phone</label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Example: 9876543210"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="email">Email</label>
+
+                <input
+                    type="email"
+                    id="email"
+                    name="email"
+                    placeholder="Example: sponsor@example.com"
+                >
+            </div>
+
+
+            <div class="form-group">
+                <label for="sponsorship_type">Sponsorship Type</label>
+
+                <select
+                    id="sponsorship_type"
+                    name="sponsorship_type"
+                    required
+                >
+
+                    <option value="">Select Sponsorship Type</option>
+
+                    <option value="Title Sponsor">
+                        Title Sponsor
+                    </option>
+
+                    <option value="Gold Sponsor">
+                        Gold Sponsor
+                    </option>
+
+                    <option value="Silver Sponsor">
+                        Silver Sponsor
+                    </option>
+
+                    <option value="Bronze Sponsor">
+                        Bronze Sponsor
+                    </option>
+
+                    <option value="Food Sponsor">
+                        Food Sponsor
+                    </option>
+
+                    <option value="Equipment Sponsor">
+                        Equipment Sponsor
+                    </option>
+
+                </select>
+            </div>
+
+
+            <div class="form-group">
+                <label for="amount">Sponsorship Amount</label>
+
+                <input
+                    type="number"
+                    id="amount"
+                    name="amount"
+                    placeholder="Example: 50000"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+            </div>
+
+
+            <div class="form-actions">
+
+                <a
+                    href="{{ url_for('sponsors') }}"
+                    class="btn btn-secondary"
+                >
+                    Cancel
+                </a>
+
+                <button type="submit" class="btn">
+                    Add Sponsor
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+{% endblock %}
